@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.h-screen {
+  height: 100vh;
+  height: 100dvh;
+}
+
+.fancy-framed-image {
+  border: 1rem solid black; /* Start with transparent border */
+  border-image: url('https://github.com/suyashrooongta/birthday-invite-photos/blob/main/photo%20border.png?raw=true') 100; /* Use border-image */
+}
