@@ -276,7 +276,7 @@ function App() {
   return (
     <div className="w-full h-screen overflow-hidden">
       <AnimatePresence mode="wait">{renderSlide()}</AnimatePresence>
-      <audio src={audiofile} autoPlay loop></audio>
+      <audio src={audiofile} autoPlay loop controls></audio>
       <Controls
         isPlaying={isPlaying}
         onPlayPause={() => setIsPlaying(!isPlaying)}
