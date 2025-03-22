@@ -211,7 +211,7 @@ const Controls = ({
 
 function App() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [cycleCount, setCycleCount] = useState(0);
   const totalSlides = monthlyPhotos.length * 2 + 3;
 
@@ -275,6 +275,7 @@ function App() {
 
   return (
     <div className="w-full h-screen overflow-hidden">
+      <AnimatePresence mode="wait">{renderSlide()}</AnimatePresence>
       <audio src={audiofile} autoPlay loop controls></audio>
       <Controls
         isPlaying={isPlaying}
