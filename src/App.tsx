@@ -14,7 +14,6 @@ import {
   RotateCcw,
 } from 'lucide-react';
 import FancyFramedImage from './FramedImage';
-import audiofile from './invite_music.mp3'
 import AudioPlayer from './AudioPlayer';
 
 interface MonthlyPhoto {
@@ -309,7 +308,7 @@ function App() {
   return (
     <div className="w-full h-screen overflow-hidden">
       <AnimatePresence mode="wait">{renderSlide()}</AnimatePresence>
-      <AudioPlayer audioSrc={audiofile} isPlaying={isPlaying} setIsPlaying={setIsPlaying} />
+      <AudioPlayer audioSrc="/Images/invite_music.mp3" isPlaying={isPlaying} setIsPlaying={setIsPlaying} />
       <Controls
         isPlaying={isPlaying}
         onPlayPause={() => setIsPlaying(!isPlaying)}
