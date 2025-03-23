@@ -308,7 +308,7 @@ function App() {
   return (
     <div className="w-full h-screen overflow-hidden">
       <AnimatePresence mode="wait">{renderSlide()}</AnimatePresence>
-      <AudioPlayer audioSrc="/Images/invite_music.mp3" isPlaying={isPlaying} setIsPlaying={setIsPlaying} />
+      <AudioPlayer audioSrc="/Music/invite_music.mp3" isPlaying={isPlaying} setIsPlaying={setIsPlaying} />
       <Controls
         isPlaying={isPlaying}
         onPlayPause={() => setIsPlaying(!isPlaying)}
