@@ -23,12 +23,10 @@ interface MonthlyPhoto {
 }
 
 const baseImageUrl =
-  'https://github.com/suyashrooongta/birthday-invite-photos/blob/main/{number}.jpg?raw=true';
-
-const musicUrl = 'https://github.com/suyashrooongta/birthday-invite-photos/blob/main/invite_music.mp3?raw=true'
+  '/Images/{number}.jpg';
 
 const backgroundImageUrl =
-  'url(https://github.com/suyashrooongta/birthday-invite-photos/blob/main/1742627088300.jpg?raw=true)';
+  'url(/Images/1742627088300.jpg)';
 
 const monthlyPhotos: MonthlyPhoto[] = [
   {
