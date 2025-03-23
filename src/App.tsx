@@ -11,9 +11,11 @@ import {
   Calendar,
   Clock,
   MapPin,
+  RotateCcw,
 } from 'lucide-react';
 import FancyFramedImage from './FramedImage';
 import audiofile from './invite_music.mp3'
+import AudioPlayer from './AudioPlayer';
 
 interface MonthlyPhoto {
   month: number;
@@ -73,7 +75,7 @@ const TransitionSlide = ({ month }: { month: number }) => (
   >
     <motion.div className="text-center">
       <motion.div
-        className="text-9xl font-bold text-blue-600"
+        className="text-6xl font-bold text-blue-600"
         animate={{ scale: 2 }}
       >
         {month}
@@ -82,7 +84,7 @@ const TransitionSlide = ({ month }: { month: number }) => (
   </motion.div>
 );
 
-const PhotoSlide = ({ photo }: { photo: MonthlyPhoto }) => (
+const PhotoSlide = ({ photo, onPhotoLoad }: { photo: MonthlyPhoto; onPhotoLoad: () => void }) => (
   <motion.div
     className="w-full h-screen bg-white flex items-center justify-center"
     style={{
@@ -94,11 +96,10 @@ const PhotoSlide = ({ photo }: { photo: MonthlyPhoto }) => (
     <FancyFramedImage
       imageUrl={photo.imageUrl}
       altText={`Ridhaan at ${photo.month} months`}
+      onLoad={onPhotoLoad}
     />
   </motion.div>
 );
-
-
 
 const FirstSlide = () => (
   <motion.div
@@ -109,7 +110,6 @@ const FirstSlide = () => (
       backgroundPosition: 'center',
     }}
   >
-    
   </motion.div>
 );
 
@@ -179,15 +179,39 @@ const InvitationSlide = () => (
 const Controls = ({
   isPlaying,
   onPlayPause,
+  onReplay,
   onNext,
   onPrev,
+  isFirstSlide,
+  isInvitation,
 }: {
   isPlaying: boolean;
   onPlayPause: () => void;
+  onReplay: () => void;
   onNext: () => void;
   onPrev: () => void;
-}) => (
-  <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-white/80 backdrop-blur-sm rounded-full shadow-lg px-6 py-3 flex gap-4">
+  isFirstSlide: boolean;
+  isInvitation: boolean;
+}) => 
+  { 
+    if (isFirstSlide) {
+      return <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center items-center bg-white/30 rounded-full w-48 h-48 cursor-pointer">
+         <button
+      onClick={onPlayPause}
+      className="text-blue-600 hover:text-blue-800 transition-colors"
+    >
+      {!isPlaying && <Play className="w-24 h-24" />}
+    </button>
+        </div>
+    } else if (isInvitation) { return <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-white/80 backdrop-blur-sm rounded-full shadow-lg px-6 py-3 flex gap-4">
+    <button
+      onClick={onReplay}
+      className="text-blue-600 hover:text-blue-800 transition-colors"
+    >
+      <RotateCcw className="w-6 h-6" />
+    </button>
+  </div> } else {
+      return <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-white/80 backdrop-blur-sm rounded-full shadow-lg px-6 py-3 flex gap-4">
     <button
       onClick={onPrev}
       className="text-blue-600 hover:text-blue-800 transition-colors"
@@ -207,12 +231,13 @@ const Controls = ({
       <SkipForward className="w-6 h-6" />
     </button>
   </div>
-);
+    }};
 
 function App() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [cycleCount, setCycleCount] = useState(0);
+  const [photoLoaded, setPhotoLoaded] = useState(false);
   const totalSlides = monthlyPhotos.length * 2 + 3;
 
   const nextSlide = useCallback(() => {
@@ -223,17 +248,19 @@ function App() {
       }
       return next;
     });
+    setPhotoLoaded(false);
   }, [totalSlides]);
 
   const prevSlide = useCallback(() => {
     setCurrentIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
+    setPhotoLoaded(false);
   }, [totalSlides]);
 
   useEffect(() => {
     const isTransition = currentIndex % 2 === 1;
     const isInvitation = currentIndex === totalSlides - 1;
 
-    if (!isPlaying || (cycleCount === 1 && isInvitation)) {
+    if (!isPlaying || isInvitation) {
       setIsPlaying(false);
       return;
     }
@@ -243,19 +270,24 @@ function App() {
     if (isInvitation) {
       duration = 10000; // 10 seconds for invitation
     } else if (currentIndex === 0) {
-      duration = 1000;
+      duration = 0;
     } else if (isTransition) {
-      duration = 800; // 1 second for month number
+      duration = 800; // 0.8 seconds for month number
     } else {
-      duration = 2500; // 2 seconds for photos
+      // Only start the timer for photo slides after the photo has loaded
+      if (!photoLoaded) return;
+      duration = 4000; // 5 seconds for photos after loading
     }
 
     const timer = setInterval(nextSlide, duration);
     return () => clearInterval(timer);
-  }, [isPlaying, currentIndex, nextSlide, cycleCount, totalSlides]);
+  }, [isPlaying, currentIndex, nextSlide, cycleCount, totalSlides, photoLoaded]);
+
+  const handlePhotoLoad = () => {
+    setPhotoLoaded(true);
+  };
 
   const renderSlide = () => {
-    
     if (currentIndex === 0) {
       return <FirstSlide />;
     }
@@ -270,21 +302,27 @@ function App() {
       return <TransitionSlide month={photoIndex + 1} />;
     }
 
-    return <PhotoSlide photo={monthlyPhotos[photoIndex]} />;
+    return <PhotoSlide 
+      photo={monthlyPhotos[photoIndex]} 
+      onPhotoLoad={handlePhotoLoad}
+    />;
   };
 
   return (
     <div className="w-full h-screen overflow-hidden">
       <AnimatePresence mode="wait">{renderSlide()}</AnimatePresence>
-      <audio src={audiofile} autoPlay loop controls></audio>
+      <AudioPlayer audioSrc={audiofile} isPlaying={isPlaying} setIsPlaying={setIsPlaying} />
       <Controls
         isPlaying={isPlaying}
         onPlayPause={() => setIsPlaying(!isPlaying)}
+        onReplay={() => {setCurrentIndex(0); setIsPlaying(true);}}
         onNext={nextSlide}
         onPrev={prevSlide}
+        isFirstSlide={currentIndex === 0}
+        isInvitation={currentIndex === totalSlides - 1}
       />
     </div>
   );
 }
 
-export default App;
+export default App
