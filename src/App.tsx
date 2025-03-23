@@ -316,7 +316,7 @@ function App() {
     <div className="w-full h-screen overflow-hidden">
       <AnimatePresence mode="wait">{renderSlide()}</AnimatePresence>
       <AudioPlayer 
-        audioSrc={audiofile} 
+        audioSrc="/Music/invite_music.mp3"
         isPlaying={isPlaying} 
         setIsPlaying={setIsPlaying}
         shouldRestart={shouldRestartAudio}
