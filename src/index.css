@@ -16,5 +16,5 @@ body {
 
 .fancy-framed-image {
   border: 1rem solid black; /* Start with transparent border */
-  border-image: url('https://github.com/suyashrooongta/birthday-invite-photos/blob/main/photo%20border.png?raw=true') 100; /* Use border-image */
+  border-image: url('/Images/photo_border.png') 100; /* Use border-image */
 }
