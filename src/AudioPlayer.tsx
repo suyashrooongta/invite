@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 
-function AudioPlayer({ audioSrc, isPlaying, setIsPlaying }) {
+function AudioPlayer({ audioSrc, isPlaying, setIsPlaying, shouldRestart, onRestartComplete }) {
   const audioRef = useRef(null);
 
   useEffect(() => {
@@ -18,6 +18,13 @@ function AudioPlayer({ audioSrc, isPlaying, setIsPlaying }) {
       }
     }
   }, [isPlaying, setIsPlaying]);
+
+  useEffect(() => {
+    if (shouldRestart && audioRef.current) {
+      audioRef.current.currentTime = 0;
+      onRestartComplete();
+    }
+  }, [shouldRestart, onRestartComplete]);
 
   return (
     <audio 
