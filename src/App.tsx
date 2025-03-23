@@ -157,15 +157,15 @@ const InvitationSlide = () => (
         >
           <div className="flex items-center justify-center gap-3">
             <Calendar className="text-blue-500" />
-            <p>Date: April 5th</p>
+            <p>April 5th</p>
           </div>
           <div className="flex items-center justify-center gap-3">
             <Clock className="text-blue-500" />
-            <p>Time: 12:30 PM to 2:30 PM</p>
+            <p>12:30 PM to 2:30 PM</p>
           </div>
           <div className="flex items-center justify-center gap-3">
             <MapPin className="text-blue-500" />
-            <p>Location: Clubhouse, Purva Carnation, Cox Town</p>
+            <p>Clubhouse, Purva Carnation, Cox Town</p>
           </div>
         </motion.div>
       </motion.div>
