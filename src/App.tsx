@@ -235,6 +235,7 @@ function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [cycleCount, setCycleCount] = useState(0);
   const [photoLoaded, setPhotoLoaded] = useState(false);
+  const [shouldRestartAudio, setShouldRestartAudio] = useState(false);
   const totalSlides = monthlyPhotos.length * 2 + 3;
 
   const nextSlide = useCallback(() => {
@@ -273,7 +274,7 @@ function App() {
     } else {
       // Only start the timer for photo slides after the photo has loaded
       if (!photoLoaded) return;
-      duration = 4000; // 5 seconds for photos after loading
+      duration = 5000; // 5 seconds for photos after loading
     }
 
     const timer = setInterval(nextSlide, duration);
@@ -282,6 +283,12 @@ function App() {
 
   const handlePhotoLoad = () => {
     setPhotoLoaded(true);
+  };
+
+  const handleReplay = () => {
+    setCurrentIndex(0);
+    setIsPlaying(true);
+    setShouldRestartAudio(true);
   };
 
   const renderSlide = () => {
@@ -308,11 +315,17 @@ function App() {
   return (
     <div className="w-full h-screen overflow-hidden">
       <AnimatePresence mode="wait">{renderSlide()}</AnimatePresence>
-      <AudioPlayer audioSrc="/Music/invite_music.mp3" isPlaying={isPlaying} setIsPlaying={setIsPlaying} />
+      <AudioPlayer 
+        audioSrc={audiofile} 
+        isPlaying={isPlaying} 
+        setIsPlaying={setIsPlaying}
+        shouldRestart={shouldRestartAudio}
+        onRestartComplete={() => setShouldRestartAudio(false)}
+      />
       <Controls
         isPlaying={isPlaying}
         onPlayPause={() => setIsPlaying(!isPlaying)}
-        onReplay={() => {setCurrentIndex(0); setIsPlaying(true);}}
+        onReplay={handleReplay}
         onNext={nextSlide}
         onPrev={prevSlide}
         isFirstSlide={currentIndex === 0}
@@ -322,4 +335,4 @@ function App() {
   );
 }
 
-export default App
+export default App;
